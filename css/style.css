@@ -1,0 +1,17 @@
+/**
+ * Allergens for Woocommerce CSS
+ * Plugin URI:  https://13node.com/informatica/wordpress/allergens-for-woocommerce/
+ * Version: 1.0
+ * Author: Danilo Ulloa
+ * Author URI: https://13node.com
+ */
+.allergens_wrapper {
+    display: flex;
+}
+.allergens_wrapper > .allergen_col {
+    margin: .1em;
+    padding: .3em;
+    border-radius: 3px;
+    flex: 1;
+    text-align: center;
+}
