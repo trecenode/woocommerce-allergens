@@ -18,8 +18,8 @@ if ( ! defined( 'TRECE_TEXT_DOMAIN' ) ) {
 	define( 'TRECE_TEXT_DOMAIN', 'allergens-for-woocommerce' );
 }
 
-add_action( 'after_setup_theme', 'trece_allergens_setup' );
-function trece_allergens_setup(){
+add_action( 'init', 'trece_load_textdomain' );
+function trece_load_textdomain(){
 	load_plugin_textdomain( TRECE_TEXT_DOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 
@@ -30,7 +30,7 @@ function trece_allergens_css() {
 add_action( 'wp_enqueue_scripts', 'trece_allergens_css' );
 
 // Woocommerce Allergens
-$allergens_checkbox =array(
+$allergens_checkbox = array(
     'gluten' => __('Gluten', 'allergens-for-woocommerce'),
     'eggs' => __('Eggs', 'allergens-for-woocommerce'),
     'milk' => __('Milk', 'allergens-for-woocommerce'),
@@ -46,21 +46,22 @@ $allergens_checkbox =array(
     'lupins' => __('Lupins', 'allergens-for-woocommerce'),
     'sulfites' => __('Sulfites', 'allergens-for-woocommerce'),
 );
-$allergens_icons =array(
-    'gluten' => plugins_url().'/allergens-woocommerce/images/gluten.png',
-    'eggs' => plugins_url().'/allergens-woocommerce/images/egg.png',
-    'milk' => plugins_url().'/allergens-woocommerce/images/milk.png',
-    'fish' => plugins_url().'/allergens-woocommerce/images/fish.png',
-    'shellfish' => plugins_url().'/allergens-woocommerce/images/shellfish.png',
-    'crustaceans' => plugins_url().'/allergens-woocommerce/images/crustaceans.png',
-    'peanut' => plugins_url().'/allergens-woocommerce/images/peanut.png',
-    'soy' => plugins_url().'/allergens-woocommerce/images/soy.png',
-    'nuts' => plugins_url().'/allergens-woocommerce/images/nuts.png',
-    'sesame' => plugins_url().'/allergens-woocommerce/images/sesame.png',
-    'celery' => plugins_url().'/allergens-woocommerce/images/celery.png',
-    'mustard' => plugins_url().'/allergens-woocommerce/images/mustard.png',
-    'lupins' => plugins_url().'/allergens-woocommerce/images/lupins.png',
-    'sulfites' => plugins_url().'/allergens-woocommerce/images/sulfites.png',
+
+$allergens_icons = array(
+    'gluten' => plugins_url( 'images/gluten.png', __FILE__ ),
+    'eggs' => plugins_url( 'images/egg.png', __FILE__ ),
+    'milk' => plugins_url( 'images/milk.png', __FILE__ ),
+    'fish' => plugins_url( 'images/fish.png', __FILE__ ),
+    'shellfish' => plugins_url( 'images/shellfish.png', __FILE__ ),
+    'crustaceans' => plugins_url( 'images/crustaceans.png', __FILE__ ),
+    'peanut' => plugins_url( 'images/peanut.png', __FILE__ ),
+    'soy' => plugins_url( 'images/soy.png', __FILE__ ),
+    'nuts' => plugins_url( 'images/nuts.png', __FILE__ ),
+    'sesame' => plugins_url( 'images/sesame.png', __FILE__ ),
+    'celery' => plugins_url( 'images/celery.png', __FILE__ ),
+    'mustard' => plugins_url( 'images/mustard.png', __FILE__ ),
+    'lupins' => plugins_url( 'images/lupins.png', __FILE__ ),
+    'sulfites' => plugins_url( 'images/sulfites.png', __FILE__ ),
 
 );
  
@@ -71,50 +72,50 @@ function trece_admin_allergens() {
     foreach( $allergens_checkbox as $id => $label ) {
         woocommerce_wp_checkbox( array( 
             'id' => $id, 
-            'label' => __( $label, 'woocommerce' )
+            'label' => $label,
         ) );
     }
 }
 add_action( 'woocommerce_product_options_pricing', 'trece_admin_allergens' );
- 
+
 //Update the values added in each field
-function trece_save_allergens( $product_id ) {
+function trece_save_allergens($product_id) {
     global $allergens_checkbox;
  
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+    if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
         return;
     }
-    $trece_fields = array_merge($allergens_checkbox);
      
-    foreach( $trece_fields as $field => $field_name ) {
-        if ( isset( $_POST[$field] ) ) {
-            update_post_meta( $product_id, $field, $_POST[$field] );
+    foreach( $allergens_checkbox as $field => $field_name ) {
+        $trece_checkbox = sanitize_text_field($_POST[$field]);
+
+        if (isset($trece_checkbox)) {
+            update_post_meta($product_id, $field, $trece_checkbox);
         } else {
-            delete_post_meta( $product_id, $field );
+            delete_post_meta($product_id, $field);
         }
     }
 }
-add_action( 'save_post', 'trece_save_allergens' );
+add_action( 'woocommerce_process_product_meta', 'trece_save_allergens' );
  
 //Show the fields as icons in the product page
 function trece_show_allergens() {
     global $product, $allergens_checkbox, $allergens_icons;
     if ( $product->product_type != 'variable' ) {
-        $trece_fields = array_merge($allergens_checkbox);
-     
+
         echo '<div class="allergen_title">'.__('Allergens', 'allergens-for-woocommerce').'</div>'. PHP_EOL;
         echo '<div class="allergens_wrapper">'. PHP_EOL;
-        foreach( $trece_fields as $field => $field_name ) {
+        foreach( $allergens_checkbox as $field => $field_name ) {
             $field_value = get_post_meta( $product->id, $field, true );
 			
             if ( $field_value ) {
-                echo '<div class="allergen_col">';
-                echo '<img src="' . $allergens_icons[$field] . '" alt="' . $field_name . '" width="75" height="75" />'. PHP_EOL;
-                echo '<span class="allergen_text">' . $field_name . '</span>'. PHP_EOL;
+                echo '<div class="allergen_col">'. PHP_EOL;
+                echo '<img src="'.esc_url($allergens_icons[$field]).'" alt="'.esc_html__($field_name, 'allergens-for-woocommerce').'" width="75" height="75" /><br />'. PHP_EOL;
+                echo '<span class="allergen_text">'.esc_html__($field_name, 'allergens-for-woocommerce').'</span>'. PHP_EOL;
                 echo '</div>'. PHP_EOL;
             }
-        }
-        echo '</div>'. PHP_EOL;
+        } 
+        echo '</div>';
     }
 }
 add_action('woocommerce_short_description', 'trece_show_allergens');
