@@ -110,8 +110,8 @@ function trece_show_allergens() {
 			
             if ( $field_value ) {
                 echo '<div class="allergen_col">'. PHP_EOL;
-                echo '<img src="'.esc_url($allergens_icons[$field]).'" alt="'.esc_html__($field_name, 'allergens-for-woocommerce').'" width="75" height="75" /><br />'. PHP_EOL;
-                echo '<span class="allergen_text">'.esc_html__($field_name, 'allergens-for-woocommerce').'</span>'. PHP_EOL;
+                echo '<img src="'.esc_url($allergens_icons[$field]).'" alt="'.esc_html__($field_name).'" width="75" height="75" /><br />'. PHP_EOL;
+                echo '<span class="allergen_text">'.esc_html__($field_name).'</span>'. PHP_EOL;
                 echo '</div>'. PHP_EOL;
             }
         } 
