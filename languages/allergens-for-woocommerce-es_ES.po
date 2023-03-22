@@ -81,7 +81,7 @@ msgstr "Sésamo"
 
 #: allergens-woocommerce.php:38
 msgid "Shellfish"
-msgstr "Marisco"
+msgstr "Molusco"
 
 #. Description of the plugin
 msgid "Show allergens in your product page."
