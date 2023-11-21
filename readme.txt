@@ -2,9 +2,9 @@
 Contributors: ulloa
 Tags: woocommerce, allergens
 Requires at least: 3.8
-Tested up to: 5.9
+Tested up to: 6.3
 Stable tag: 1.3
-Requires PHP: 5.3
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: woocommerce, allergens 
@@ -23,22 +23,19 @@ Allergens icons by Icon Icons (https://blog.icon-icons.com/food-allergen-icons/)
 
 1. Upload the 'allergens-woocommerce' plugin folder to the '/wp-content/plugins/' directory.
 2. Activate the "allergens-woocommerce" list plugin through the 'Plugins' menu in WordPress.
-3. Ready, add some products with allergens.
+3. Ready, add some sales with date and watch.
 
 == Screenshots ==
 1- Product Page
 
 == Changelog ==
+= 1.3.4 =
+* CSS Hotfix
+= 1.3.3 =
+* Hotfix: not deleting on variation
 = 1.3.2 =
-Added `treceafw_show_allergens_out($product)` function, to allow developers to call allergens in their theme/plugin. For avoid problems you can add a checking before call the function.
-
-`<?php
-if ( !function_exists( 'treceafw_show_allergens' ) ) {
-    return;
-} else {
-    echo treceafw_show_allergensout($product);
-}
-?>`
+* Added Pistachio as a customer need
+* Better css in variations
 = 1.3.1 =
 * A lot of css fixes and now dont replace the short description.
 = 1.3 =

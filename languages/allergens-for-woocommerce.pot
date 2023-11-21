@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Allergens for Woocommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-26 22:14+0000\n"
+"POT-Creation-Date: 2023-10-20 09:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Danilo Ulloa <danilouperez@gmail.com>\n"
 "Language-Team: \n"
@@ -16,7 +16,8 @@ msgstr ""
 "X-Loco-Version: 2.5.8; wp-5.9.1\n"
 "X-Domain: allergens-for-woocommerce"
 
-#: allergens-woocommerce.php:105
+#: allergens-woocommerce.php:81 allergens-woocommerce.php:93
+#: allergens-woocommerce.php:134 allergens-woocommerce.php:160
 msgid "Allergens"
 msgstr ""
 
@@ -24,11 +25,11 @@ msgstr ""
 msgid "Allergens for Woocommerce"
 msgstr ""
 
-#: allergens-woocommerce.php:44
+#: allergens-woocommerce.php:49
 msgid "Celery"
 msgstr ""
 
-#: allergens-woocommerce.php:39
+#: allergens-woocommerce.php:44
 msgid "Crustaceans"
 msgstr ""
 
@@ -36,15 +37,15 @@ msgstr ""
 msgid "Danilo Ulloa"
 msgstr ""
 
-#: allergens-woocommerce.php:35
+#: allergens-woocommerce.php:40
 msgid "Eggs"
 msgstr ""
 
-#: allergens-woocommerce.php:37
+#: allergens-woocommerce.php:42
 msgid "Fish"
 msgstr ""
 
-#: allergens-woocommerce.php:34
+#: allergens-woocommerce.php:39
 msgid "Gluten"
 msgstr ""
 
@@ -56,31 +57,35 @@ msgstr ""
 msgid "https://13node.com/informatica/wordpress/allergens-for-woocommerce/"
 msgstr ""
 
-#: allergens-woocommerce.php:46
+#: allergens-woocommerce.php:51
 msgid "Lupins"
 msgstr ""
 
-#: allergens-woocommerce.php:36
+#: allergens-woocommerce.php:41
 msgid "Milk"
 msgstr ""
 
-#: allergens-woocommerce.php:45
+#: allergens-woocommerce.php:50
 msgid "Mustard"
 msgstr ""
 
-#: allergens-woocommerce.php:42
+#: allergens-woocommerce.php:47
 msgid "Nuts"
 msgstr ""
 
-#: allergens-woocommerce.php:40
+#: allergens-woocommerce.php:45
 msgid "Peanut"
 msgstr ""
 
-#: allergens-woocommerce.php:43
+#: allergens-woocommerce.php:53
+msgid "Pistachio"
+msgstr ""
+
+#: allergens-woocommerce.php:48
 msgid "Sesame"
 msgstr ""
 
-#: allergens-woocommerce.php:38
+#: allergens-woocommerce.php:43
 msgid "Shellfish"
 msgstr ""
 
@@ -88,10 +93,10 @@ msgstr ""
 msgid "Show allergens in your product page."
 msgstr ""
 
-#: allergens-woocommerce.php:41
+#: allergens-woocommerce.php:46
 msgid "Soy"
 msgstr ""
 
-#: allergens-woocommerce.php:47
+#: allergens-woocommerce.php:52
 msgid "Sulfites"
 msgstr ""

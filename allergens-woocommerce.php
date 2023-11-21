@@ -3,7 +3,7 @@
  * Plugin Name: Allergens for Woocommerce
  * Plugin URI:  https://13node.com/informatica/wordpress/allergens-for-woocommerce/
  * Description: Show allergens in your product page.
- * Version: 1.3.2
+ * Version: 1.3.4
  * Author: Danilo Ulloa
  * Author URI: https://13node.com
  * Text Domain: allergens-for-woocommerce
@@ -50,6 +50,7 @@ $allergens_checkbox = array(
     'mustard' => __('Mustard', 'allergens-for-woocommerce'),
     'lupins' => __('Lupins', 'allergens-for-woocommerce'),
     'sulfites' => __('Sulfites', 'allergens-for-woocommerce'),
+    'pistachio' => __('Pistachio', 'allergens-for-woocommerce'),
 );
 
 $allergens_icons = array(
@@ -67,6 +68,7 @@ $allergens_icons = array(
     'mustard' => plugins_url( 'images/mustard.png', __FILE__ ),
     'lupins' => plugins_url( 'images/lupins.png', __FILE__ ),
     'sulfites' => plugins_url( 'images/sulfites.png', __FILE__ ),
+    'pistachio' => plugins_url( 'images/pistachio.png', __FILE__ ),
 
 );
  
@@ -183,7 +185,9 @@ function treceafw_save_variations_allergens($variation_id, $i) {
 
         if (isset($_treceafw_checkbox)) {
             update_post_meta($variation_id, '_afwv_'.$field, $_treceafw_checkbox);
-        } 
+        } else {
+            delete_post_meta($variation_id, '_afwv_'.$field);
+        }
     }
 }
 add_action( 'woocommerce_available_variation', 'treceafw_show_variations_allergens');
@@ -194,7 +198,7 @@ function treceafw_show_variations_allergens($variation) {
         foreach( $allergens_checkbox as $field => $field_name ) {
             $variation['_afwv_'.$field] = get_post_meta($variation['variation_id'], '_afwv_'.$field, true);
             if ( $variation['_afwv_'.$field] == true) {
-                $variation['_afwv_'.$field] = '<div class="allergen_col"><img src="'.esc_url($allergens_icons[$field]).'" alt="'.esc_html__($field_name).'" width="48" height="48" /><br /><span class="allergen_text">'.esc_html__($field_name).'</span></div>';
+                $variation['_afwv_'.$field] = '<div class="colu-3"><img src="'.esc_url($allergens_icons[$field]).'" alt="'.esc_html__($field_name).'" width="48" height="48" /><br /><span class="allergen_text">'.esc_html__($field_name).'</span></div>';
             }
         }
         return $variation;
@@ -225,26 +229,4 @@ add_filter('woocommerce_locate_template', 'treceafw_template', 1, 3);
     $template = $_template;
 
    return $template;
-}
-
-// Function for use in external themes/plugins
-function treceafw_show_allergens_out($product) {
-    global $allergens_checkbox, $allergens_icons;
-    if ( $product->product_type != 'variable' ) {
-
-        echo '<div class="allergens_container">'. PHP_EOL;
-        echo '<div class="allergens_row">'. PHP_EOL;
-        foreach( $allergens_checkbox as $field => $field_name ) {
-            $field_value = get_post_meta( $product->id, $field, true );
-			
-            if ( $field_value ) {
-                echo '<div class="colu-3 allergens_text-center">'. PHP_EOL;
-                echo '<img src="'.esc_url($allergens_icons[$field]).'" alt="'.esc_html__($field_name).'" width="24" height="24" /><br />'. PHP_EOL;
-                echo '<small class="allergen_text">'.esc_html__($field_name).'</small>'. PHP_EOL;
-                echo '</div>'. PHP_EOL;
-            }
-        } 
-        echo '</div>';
-        echo '</div>';
-    }
 }
