@@ -9,6 +9,82 @@
  #woocommerce-product-data ul.wc-tabs li.treceafw_tab_options a::before {
     content: "\f187";
 }
+
+/* Settings Page Styles */
+.treceafw-settings-wrap {
+    max-width: 1200px;
+}
+
+.treceafw-settings-wrap h1 {
+    margin-bottom: 20px;
+}
+
+.treceafw-theme-selector {
+    min-width: 200px;
+    padding: 5px;
+}
+
+.treceafw-preview-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.treceafw-preview-section h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.treceafw-icons-preview {
+    padding: 20px 0;
+}
+
+.treceafw-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.treceafw-preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.treceafw-preview-item:hover {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+}
+
+.treceafw-preview-item img {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.treceafw-preview-item span {
+    font-size: 12px;
+    color: #555;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 782px) {
+    .treceafw-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 15px;
+    }
+}
 .allergens_title {
     padding-top: 10px;
     padding-left: 25px;
