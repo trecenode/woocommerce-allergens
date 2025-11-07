@@ -3,7 +3,7 @@ Contributors: ulloa
 Tags: woocommerce, allergens
 Requires at least: 3.8
 Tested up to: 6.8
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,9 @@ Trece Icons by 13Node (https://13node.com)
 1- Product Page
 
 == Changelog ==
+= 1.6.2 =
+* Fixed fatal error: Call to a member function is_type() on string
+* Added proper validation for $product object before calling methods
 = 1.6.1 =
 * Fixes
 = 1.6.0 =

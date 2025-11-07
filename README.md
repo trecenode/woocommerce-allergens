@@ -1,6 +1,6 @@
 # Allergens System for WooCommerce
 
-![WordPress Plugin Version](https://img.shields.io/badge/version-1.6.1-blue)
+![WordPress Plugin Version](https://img.shields.io/badge/version-1.6.2-blue)
 ![WordPress](https://img.shields.io/badge/WordPress-3.8%2B-brightgreen)
 ![WooCommerce](https://img.shields.io/badge/WooCommerce-required-purple)
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-777BB4)
@@ -76,6 +76,10 @@ Uses pure JavaScript to dynamically inject allergens, avoiding template conflict
 - **Trece Icons**: By 13Node ([13node.com](https://13node.com))
 
 ## 📝 Changelog
+
+### 1.6.2
+- Fixed fatal error: Call to a member function is_type() on string
+- Added proper validation for $product object before calling methods
 
 ### 1.6.1
 - Documentation improvements

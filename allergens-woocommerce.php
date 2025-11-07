@@ -3,7 +3,7 @@
  * Plugin Name: Allergens for Woocommerce
  * Plugin URI:  https://13node.com/en/producto/allergens-for-woocommerce/
  * Description: Show allergens in your product page.
- * Version: 1.6.1
+ * Version: 1.6.2
  * Author: Danilo Ulloa
  * Author URI: https://13node.com
  * Text Domain: allergens-for-woocommerce
@@ -33,7 +33,13 @@ add_action('wp_enqueue_scripts', 'treceafw_allergens_css');
 function treceafw_allergens_variation_js() {
     if (is_product()) {
         global $product;
-        if ($product && $product->is_type('variable')) {
+        
+        // Ensure $product is a valid WC_Product object
+        if (!is_object($product)) {
+            $product = wc_get_product(get_the_ID());
+        }
+        
+        if ($product && is_a($product, 'WC_Product') && $product->is_type('variable')) {
             wp_enqueue_script('treceafw-variations', plugins_url('js/variations.js', __FILE__), array('jquery'), '1.5.0', true);
             
             // Pass allergen labels and icon URLs to JavaScript
