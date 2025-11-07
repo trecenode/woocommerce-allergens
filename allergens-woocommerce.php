@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Allergens for Woocommerce
- * Plugin URI:  https://13node.com/informatica/wordpress/allergens-for-woocommerce/
+ * Plugin URI:  https://13node.com/en/producto/allergens-for-woocommerce/
  * Description: Show allergens in your product page.
- * Version: 1.5.0
+ * Version: 1.6.0
  * Author: Danilo Ulloa
  * Author URI: https://13node.com
  * Text Domain: allergens-for-woocommerce
@@ -28,6 +28,35 @@ function treceafw_allergens_css() {
     wp_enqueue_style( 'prefix-style', plugins_url('css/style.css', __FILE__) );
 }
 add_action('wp_enqueue_scripts', 'treceafw_allergens_css');
+
+// Add custom JavaScript for variation allergens (Page builder compatibility)
+function treceafw_allergens_variation_js() {
+    if (is_product()) {
+        global $product;
+        if ($product && $product->is_type('variable')) {
+            wp_enqueue_script('treceafw-variations', plugins_url('js/variations.js', __FILE__), array('jquery'), '1.5.0', true);
+            
+            // Pass allergen labels and icon URLs to JavaScript
+            global $allergens_checkbox;
+            $allergens_icons = treceafw_get_allergen_icons();
+            
+            $allergens_data = array();
+            foreach ($allergens_checkbox as $key => $label) {
+                $allergens_data[$key] = array(
+                    'label' => $label,
+                    'icon' => $allergens_icons[$key]
+                );
+            }
+            
+            wp_localize_script('treceafw-variations', 'treceafwData', array(
+                'allergens' => $allergens_data,
+                'title' => __('Allergens', 'allergens-for-woocommerce'),
+                'ariaLabel' => __('Product allergen information', 'allergens-for-woocommerce')
+            ));
+        }
+    }
+}
+add_action('wp_enqueue_scripts', 'treceafw_allergens_variation_js');
 
 function treceafw_allergens_admin_css() {
     wp_enqueue_style('admin-styles', plugins_url('css/admin.css', __FILE__) );
@@ -314,6 +343,64 @@ function treceafw_show_allergens() {
     }
 }
 add_action('woocommerce_before_add_to_cart_form', 'treceafw_show_allergens');
+
+// Function to show allergens for custom themes/plugins
+// Returns HTML instead of echoing it
+function treceafw_show_allergens_out($product = null) {
+    global $allergens_checkbox;
+    $allergens_icons = treceafw_get_allergen_icons();
+    
+    // If no product provided, try to get global product
+    if (!$product) {
+        global $product;
+    }
+    
+    // Return empty if no product
+    if (!$product) {
+        return '';
+    }
+    
+    // Don't show for variable products (use variations instead)
+    if ($product->is_type('variable')) {
+        return '';
+    }
+    
+    $output = '';
+    $has_allergens = false;
+    
+    // Check if product has any allergens
+    foreach ($allergens_checkbox as $field => $field_name) {
+        $field_value = get_post_meta($product->get_id(), $field, true);
+        if ($field_value) {
+            $has_allergens = true;
+            break;
+        }
+    }
+    
+    // Only build output if there are allergens
+    if ($has_allergens) {
+        $output .= '<div class="allergen_title">'.esc_html__('Allergens', 'allergens-for-woocommerce').'</div>'. PHP_EOL;
+        $output .= '<div class="allergens_container" role="region" aria-labelledby="allergens-heading">'. PHP_EOL;
+        $output .= '<h2 id="allergens-heading" class="screen-reader-text">'.esc_html__('Product allergen information', 'allergens-for-woocommerce').'</h2>'. PHP_EOL;
+        $output .= '<div class="allergens_row">'. PHP_EOL;
+        
+        foreach ($allergens_checkbox as $field => $field_name) {
+            $field_value = get_post_meta($product->get_id(), $field, true);
+            
+            if ($field_value) {
+                $output .= '<div class="colu-3">'. PHP_EOL;
+                $output .= '<img src="'.esc_url($allergens_icons[$field]).'" alt="" aria-hidden="true" width="50" height="50" /><br />'. PHP_EOL;
+                $output .= '<span class="allergen_text">'.esc_html($field_name).'</span>'. PHP_EOL;
+                $output .= '</div>'. PHP_EOL;
+            }
+        }
+        
+        $output .= '</div>';
+        $output .= '</div>';
+    }
+    
+    return $output;
+}
 
 /*
  Add Custom field to Variations
