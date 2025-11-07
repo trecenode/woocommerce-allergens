@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wpml-config>
+    <custom-fields>
+        <!-- Main product allergen fields -->
+        <custom-field action="copy">gluten</custom-field>
+        <custom-field action="copy">eggs</custom-field>
+        <custom-field action="copy">milk</custom-field>
+        <custom-field action="copy">fish</custom-field>
+        <custom-field action="copy">shellfish</custom-field>
+        <custom-field action="copy">crustaceans</custom-field>
+        <custom-field action="copy">peanut</custom-field>
+        <custom-field action="copy">soy</custom-field>
+        <custom-field action="copy">nuts</custom-field>
+        <custom-field action="copy">sesame</custom-field>
+        <custom-field action="copy">celery</custom-field>
+        <custom-field action="copy">mustard</custom-field>
+        <custom-field action="copy">lupins</custom-field>
+        <custom-field action="copy">sulfites</custom-field>
+        <custom-field action="copy">pistachio</custom-field>
+        
+        <!-- Variation allergen fields -->
+        <custom-field action="copy">_afwv_gluten</custom-field>
+        <custom-field action="copy">_afwv_eggs</custom-field>
+        <custom-field action="copy">_afwv_milk</custom-field>
+        <custom-field action="copy">_afwv_fish</custom-field>
+        <custom-field action="copy">_afwv_shellfish</custom-field>
+        <custom-field action="copy">_afwv_crustaceans</custom-field>
+        <custom-field action="copy">_afwv_peanut</custom-field>
+        <custom-field action="copy">_afwv_soy</custom-field>
+        <custom-field action="copy">_afwv_nuts</custom-field>
+        <custom-field action="copy">_afwv_sesame</custom-field>
+        <custom-field action="copy">_afwv_celery</custom-field>
+        <custom-field action="copy">_afwv_mustard</custom-field>
+        <custom-field action="copy">_afwv_lupins</custom-field>
+        <custom-field action="copy">_afwv_sulfites</custom-field>
+        <custom-field action="copy">_afwv_pistachio</custom-field>
+    </custom-fields>
+</wpml-config>

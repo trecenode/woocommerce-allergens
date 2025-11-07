@@ -3,7 +3,7 @@
  * Plugin Name: Allergens for Woocommerce
  * Plugin URI:  https://13node.com/informatica/wordpress/allergens-for-woocommerce/
  * Description: Show allergens in your product page.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: Danilo Ulloa
  * Author URI: https://13node.com
  * Text Domain: allergens-for-woocommerce
@@ -392,4 +392,270 @@ add_filter('woocommerce_locate_template', 'treceafw_template', 1, 3);
     $template = $_template;
 
    return $template;
+}
+
+// WPML Compatibility
+add_action('init', 'treceafw_wpml_compatibility', 20);
+function treceafw_wpml_compatibility() {
+    if (function_exists('icl_register_string')) {
+        // Auto-configure WPML custom fields settings
+        add_action('admin_init', 'treceafw_configure_wpml_custom_fields');
+        
+        // Hook into product save to copy allergens to all translations
+        add_action('woocommerce_update_product', 'treceafw_sync_allergens_to_translations', 20, 1);
+        
+        // Copy allergens when duplicating for translation
+        add_action('icl_make_duplicate', 'treceafw_copy_allergens_on_duplicate', 10, 4);
+        
+        // Copy variation allergens when variation is saved
+        add_action('woocommerce_save_product_variation', 'treceafw_sync_variation_allergens_to_translations', 20, 2);
+    }
+}
+
+// Auto-configure WPML custom fields settings
+function treceafw_configure_wpml_custom_fields() {
+    if (!function_exists('icl_register_string')) {
+        return;
+    }
+    
+    global $allergens_checkbox;
+    
+    // Get WPML custom fields settings
+    $settings = get_option('_wpml_custom_fields_translation', array());
+    
+    $needs_update = false;
+    
+    // Configure main product allergen fields to copy
+    foreach ($allergens_checkbox as $field => $field_name) {
+        if (!isset($settings[$field]) || $settings[$field] != 1) {
+            $settings[$field] = 1; // 1 = Copy
+            $needs_update = true;
+        }
+        
+        // Configure variation allergen fields to copy
+        $variation_key = '_afwv_' . $field;
+        if (!isset($settings[$variation_key]) || $settings[$variation_key] != 1) {
+            $settings[$variation_key] = 1; // 1 = Copy
+            $needs_update = true;
+        }
+    }
+    
+    // Update settings if needed
+    if ($needs_update) {
+        update_option('_wpml_custom_fields_translation', $settings);
+    }
+}
+
+// Sync allergens to all translations when product is saved
+function treceafw_sync_allergens_to_translations($product_id) {
+    if (!function_exists('icl_object_id')) {
+        return;
+    }
+    
+    global $sitepress, $allergens_checkbox;
+    
+    if (!$sitepress) {
+        return;
+    }
+    
+    // Get all translations of this product
+    $trid = $sitepress->get_element_trid($product_id, 'post_product');
+    if (!$trid) {
+        return;
+    }
+    
+    $translations = $sitepress->get_element_translations($trid, 'post_product');
+    
+    if (empty($translations)) {
+        return;
+    }
+    
+    // Get current language and check if this is the original
+    $current_lang = $sitepress->get_current_language();
+    $default_lang = $sitepress->get_default_language();
+    
+    // Determine the source product (use current if it's being saved)
+    $source_product_id = $product_id;
+    
+    // Copy allergens to each translation
+    foreach ($translations as $lang_code => $translation) {
+        $translated_id = $translation->element_id;
+        
+        // Skip if it's the same product
+        if ($translated_id == $source_product_id) {
+            continue;
+        }
+        
+        // Copy all allergen fields
+        foreach ($allergens_checkbox as $field => $field_name) {
+            $value = get_post_meta($source_product_id, $field, true);
+            
+            if ($value) {
+                update_post_meta($translated_id, $field, $value);
+            } else {
+                delete_post_meta($translated_id, $field);
+            }
+        }
+    }
+    
+    // If it's a variable product, sync variations too
+    $product = wc_get_product($product_id);
+    if ($product && $product->is_type('variable')) {
+        treceafw_sync_all_variation_allergens($product_id, $translations);
+    }
+}
+
+// Sync variation allergens to all translations
+function treceafw_sync_variation_allergens_to_translations($variation_id, $loop) {
+    if (!function_exists('icl_object_id')) {
+        return;
+    }
+    
+    global $sitepress;
+    
+    if (!$sitepress) {
+        return;
+    }
+    
+    // Get the parent product ID
+    $variation = wc_get_product($variation_id);
+    if (!$variation) {
+        return;
+    }
+    
+    $parent_id = $variation->get_parent_id();
+    if (!$parent_id) {
+        return;
+    }
+    
+    // Get all translations of the parent product
+    $trid = $sitepress->get_element_trid($parent_id, 'post_product');
+    if (!$trid) {
+        return;
+    }
+    
+    $translations = $sitepress->get_element_translations($trid, 'post_product');
+    
+    if (empty($translations)) {
+        return;
+    }
+    
+    // Sync this specific variation to all translated products
+    treceafw_sync_single_variation_allergens($parent_id, $variation_id, $translations);
+}
+
+// Helper function to sync all variations
+function treceafw_sync_all_variation_allergens($parent_id, $translations) {
+    $parent_product = wc_get_product($parent_id);
+    
+    if (!$parent_product || !$parent_product->is_type('variable')) {
+        return;
+    }
+    
+    $variations = $parent_product->get_children();
+    
+    foreach ($variations as $variation_id) {
+        treceafw_sync_single_variation_allergens($parent_id, $variation_id, $translations);
+    }
+}
+
+// Helper function to sync a single variation to all translations
+function treceafw_sync_single_variation_allergens($parent_id, $variation_id, $translations) {
+    global $allergens_checkbox, $sitepress;
+    
+    if (!$sitepress) {
+        return;
+    }
+    
+    // Get variation attributes to match with translated variations
+    $variation = wc_get_product($variation_id);
+    if (!$variation) {
+        return;
+    }
+    
+    $variation_attributes = $variation->get_variation_attributes();
+    
+    // For each translation
+    foreach ($translations as $lang_code => $translation) {
+        $translated_parent_id = $translation->element_id;
+        
+        // Skip if it's the same product
+        if ($translated_parent_id == $parent_id) {
+            continue;
+        }
+        
+        // Get the translated product
+        $translated_product = wc_get_product($translated_parent_id);
+        
+        if (!$translated_product || !$translated_product->is_type('variable')) {
+            continue;
+        }
+        
+        // Find the matching variation in the translated product
+        $translated_variations = $translated_product->get_children();
+        
+        foreach ($translated_variations as $translated_variation_id) {
+            $translated_variation = wc_get_product($translated_variation_id);
+            
+            if (!$translated_variation) {
+                continue;
+            }
+            
+            $translated_attributes = $translated_variation->get_variation_attributes();
+            
+            // Check if attributes match (same position/structure)
+            if (count($variation_attributes) === count($translated_attributes)) {
+                // Copy allergen data
+                foreach ($allergens_checkbox as $field => $field_name) {
+                    $meta_key = '_afwv_' . $field;
+                    $value = get_post_meta($variation_id, $meta_key, true);
+                    
+                    if ($value) {
+                        update_post_meta($translated_variation_id, $meta_key, $value);
+                    } else {
+                        delete_post_meta($translated_variation_id, $meta_key);
+                    }
+                }
+                break; // Found the matching variation, move to next translation
+            }
+        }
+    }
+}
+
+// Copy allergens data when duplicating products
+function treceafw_copy_allergens_on_duplicate($master_post_id, $lang, $post_array, $id) {
+    global $allergens_checkbox;
+    
+    // Copy main product allergens
+    foreach ($allergens_checkbox as $field => $field_name) {
+        $value = get_post_meta($master_post_id, $field, true);
+        if ($value) {
+            update_post_meta($id, $field, $value);
+        }
+    }
+    
+    // Copy variation allergens if it's a variable product
+    $product = wc_get_product($master_post_id);
+    if ($product && $product->is_type('variable')) {
+        $variations = $product->get_children();
+        $new_product = wc_get_product($id);
+        
+        if ($new_product && $new_product->is_type('variable')) {
+            $new_variations = $new_product->get_children();
+            
+            // Match and copy variations
+            if (count($variations) === count($new_variations)) {
+                for ($i = 0; $i < count($variations); $i++) {
+                    foreach ($allergens_checkbox as $field => $field_name) {
+                        $meta_key = '_afwv_' . $field;
+                        $value = get_post_meta($variations[$i], $meta_key, true);
+                        
+                        if ($value) {
+                            update_post_meta($new_variations[$i], $meta_key, $value);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

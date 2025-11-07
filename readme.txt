@@ -3,7 +3,7 @@ Contributors: ulloa
 Tags: woocommerce, allergens
 Requires at least: 3.8
 Tested up to: 6.8
-Stable tag: 1.4
+Stable tag: 1.5.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -13,6 +13,16 @@ Allergens System for Woocommerce
 
 == Description ==
 This plugin add <strong>allergens</strong> to each product in your store.
+
+<strong>Features:</strong>
+* Add allergens to simple and variable products
+* Display allergens with customizable icons (Classic or Trece theme)
+* Full WPML compatibility - allergens automatically copy to translations
+* Accessibility friendly with proper ARIA labels
+* Custom tab in product admin for easy management
+
+<strong>WPML Compatibility:</strong>
+When using WPML, allergen settings are automatically copied to product translations. No need to manually reconfigure allergens for each language - they will be inherited from the original product.
 
 We do web development and if you need a developer or if you think you have found a bug in plugin, if you have any question, please feel free to contact us by this email info@13node.com.
 
@@ -30,6 +40,11 @@ Trece Icons by 13Node (https://13node.com)
 1- Product Page
 
 == Changelog ==
+= 1.5.0 =
+* WPML Compatibility: Allergens now automatically copy to product translations
+* Auto-configuration of WPML custom fields for allergens
+* Support for variable products with WPML
+* Added wpml-config.xml for automatic field configuration
 = 1.4.0 =
 * Accesibility Fixes and Icons Designs options under Woocommerce > Allergens
 = 1.3.5.1 =
