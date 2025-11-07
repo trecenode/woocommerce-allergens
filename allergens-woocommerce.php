@@ -444,41 +444,16 @@ function treceafw_save_variations_allergens($variation_id, $i) {
 }
 add_action( 'woocommerce_available_variation', 'treceafw_show_variations_allergens');
 function treceafw_show_variations_allergens($variation) {
-    global $product, $allergens_checkbox, $allergens_icons;
+    global $allergens_checkbox;
 
-        foreach( $allergens_checkbox as $field => $field_name ) {
-            $variation['_afwv_'.$field] = get_post_meta($variation['variation_id'], '_afwv_'.$field, true);
-            if ( $variation['_afwv_'.$field] == true) {
-                $variation['_afwv_'.$field] = '<div class="colu-3"><img src="'.esc_url($allergens_icons[$field]).'" alt="" aria-hidden="true" width="48" height="48" /><br /><span class="allergen_text">'.esc_html__($field_name).'</span></div>';
-            }
-        }
-        return $variation;
-}
-// Add Template Files
-add_filter('woocommerce_locate_template', 'treceafw_template', 1, 3);
-   function treceafw_template( $template, $template_name, $template_path ) {
-     global $woocommerce;
-     $_template = $template;
-     if ( ! $template_path ) 
-        $template_path = $woocommerce->template_url;
- 
-        $plugin_path  = untrailingslashit( plugin_dir_path( __FILE__ ) )  . '/template/woocommerce/';
- 
-    // Look within passed path within the theme - this is priority
-    $template = locate_template(
-    array(
-      $template_path . $template_name,
-      $template_name
-    )
-   );
- 
-   if( ! $template && file_exists( $plugin_path . $template_name ) )
-    $template = $plugin_path . $template_name;
- 
-   if ( ! $template )
-    $template = $_template;
-
-   return $template;
+    // Add allergen data to variation for JavaScript to process
+    foreach( $allergens_checkbox as $field => $field_name ) {
+        $value = get_post_meta($variation['variation_id'], '_afwv_'.$field, true);
+        // Pass boolean value to JavaScript (not HTML)
+        $variation['_afwv_'.$field] = !empty($value) ? true : false;
+    }
+    
+    return $variation;
 }
 
 // WPML Compatibility

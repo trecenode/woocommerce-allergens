@@ -19,7 +19,7 @@ This plugin add <strong>allergens</strong> to each product in your store.
 * Display allergens with customizable icons (Classic or Trece theme)
 * Full WPML compatibility - allergens automatically copy to translations
 * Page builder compatible (Oxygen, Elementor, Bricks, Divi, etc.)
-* Hybrid system: Template + JavaScript for maximum compatibility
+* Pure JavaScript system for maximum compatibility (no template overrides)
 * Accessibility friendly with proper ARIA labels
 * Custom tab in product admin for easy management
 * Developer-friendly function for custom themes: treceafw_show_allergens_out()
@@ -38,7 +38,7 @@ if (function_exists('treceafw_show_allergens_out')) {
 When using WPML, allergen settings are automatically copied to product translations. No need to manually reconfigure allergens for each language - they will be inherited from the original product.
 
 <strong>Page Builder Compatibility:</strong>
-Works seamlessly with modern page builders like Oxygen Builder, Elementor, Bricks, and Divi. Uses a hybrid approach with both traditional templates and dynamic JavaScript.
+Works seamlessly with modern page builders like Oxygen Builder, Elementor, Bricks, and Divi. Uses pure JavaScript to dynamically inject allergens, avoiding template conflicts.
 
 We do web development and if you need a developer or if you think you have found a bug in plugin, if you have any question, please feel free to contact us by this email info@13node.com.
 
@@ -58,9 +58,10 @@ Trece Icons by 13Node (https://13node.com)
 == Changelog ==
 = 1.6.0 =
 * Page Builder Compatibility: Works with Oxygen, Elementor, Bricks, Divi, etc.
-* Hybrid system: Template + JavaScript for maximum compatibility
-* Dynamic JavaScript handling for variation allergens
+* Pure JavaScript system for maximum compatibility (no template overrides)
+* Dynamic allergen display using WooCommerce events
 * Re-added treceafw_show_allergens_out() function for custom themes/plugins
+* Simplified codebase - removed template override system
 = 1.5.0 =
 * WPML Compatibility: Allergens now automatically copy to product translations
 * Auto-configuration of WPML custom fields for allergens
