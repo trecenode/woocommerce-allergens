@@ -3,7 +3,7 @@
  * Plugin Name: Allergens for Woocommerce
  * Plugin URI:  https://13node.com/en/producto/allergens-for-woocommerce/
  * Description: Show allergens in your product page.
- * Version: 1.6.0
+ * Version: 1.6.1
  * Author: Danilo Ulloa
  * Author URI: https://13node.com
  * Text Domain: allergens-for-woocommerce
